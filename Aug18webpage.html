@@ -21,7 +21,7 @@
         outline-width: 3px;
         color:firebrick;
     }
-    #courseSummary {
+    #clickedDiv {
         border: 2px solid salmon;
         color: darkred;
     }
@@ -33,12 +33,13 @@
     </div>
     <br>
     <br>
-    <div id="courseSummary" onclick="divClicker"> 
+    <div id="clickedDiv" onclick="divClicker"> 
         This div should have an onclick event that creates a console.log entry that says the `the div was clicked`.
     </div>
 </body>
 <script>
     document.getElementById("clickForHello").addEventListener("click", helloThere);
+    document.getElementById("clickedDiv").addEventListener("click", divClicker);
     function helloThere(){
         alert("Hello, there!");
     }
