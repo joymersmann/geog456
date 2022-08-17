@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment: "Make a webpage on GitHub"</title>
+</head>
+<style>
+    body {
+        text-align: center; 
+        background-color: brown;
+    }
+    div {
+        background-color: burlywood;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        margin-left: 10%;
+        margin-right: 10%;
+        outline-style: solid;
+        outline-width: 3px;
+        color:firebrick;
+    }
+    #courseSummary {
+        border: 2px solid salmon;
+        color: darkred;
+    }
+</style>
+<body>
+    <div> 
+        <h1 id="clickForHello">Hello world! This is Joy Mersmann's webpage, being used to test out Visual Studio Code for GEOG 456.</h1>
+        This h1 element should have a onclick event with an alert that says 'Hello there.'
+    </div>
+    <br>
+    <br>
+    <div id="courseSummary" onclick="divClicker"> 
+        This div should have an onclick event that creates a console.log entry that says the `the div was clicked`.
+    </div>
+</body>
+<script>
+    document.getElementById("clickForHello").addEventListener("click", helloThere);
+    function helloThere(){
+        alert("Hello, there!");
+    }
+    function divClicker(){
+        console.log("The div was clicked.");
+    }
+</script>
+</html>
+
