@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experimenting with Plotly</title>
+</head>
+<style>
+    #myDiv {
+        border: 1px solid darkred;
+        width: 800px;
+        height: 800px;
+        background-color: salmon;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.14.0/plotly.min.js" integrity="sha512-XDnqTWsAcVl16AYJoBHumISzIYThowGjR67jeL53NSp6tajsq2qf5UeAWvk1n6Hp3M2iMsV/ewhPScBiLCDs9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://gisunc.github.io/GEOG456FALL2022Data/TMAX/tmax.js"></script>
+<body>
+    <div id="myDiv"> </div>
+</body>
+<script>
+    let arrayDate = []
+    let arrayTmax = []
+
+    //OUTDATED METHOD
+    //for(let i = 0; i < chTmax.length; i++){
+    //    arrayDate.push(chTmax[i]["DATE"])
+    //    arrayTmax.push(chTmax[i]["TMAX"])
+    //}
+    
+    arrayDate = chTmax.map(e => e.DATE)
+    arrayTmax = chTmax.map(e => Number(e.TMAX))
+
+    var tmaxByDate = {
+        x: arrayDate,
+        y: arrayTmax,
+        mode: 'markers',
+        type: 'scatter',
+        marker: {
+            color: "R"
+        }
+    };
+    var layout = {
+        xaxis: {
+            type: 'date',
+            title: 'Date of measurement'
+        },
+        yaxis: {
+            title: 'Temperature maximum'
+        },
+        title: "chTmax: Max temperature by date"
+    };
+    console.log(tmaxByDate);
+    var data = [tmaxByDate];
+    Plotly.newPlot("myDiv", data, layout);
+</script>
+</html>
