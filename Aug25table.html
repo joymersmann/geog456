@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table {
+        border: 2px solid darkred;
+        width: 100%;
+        background-color: brown;
+    }
+    th {
+        border: 2px solid darkred;
+        background-color: salmon;
+    }
+    tr {
+        background-color: wheat;
+    }
+    tr:nth-child(even) {
+        background-color: burlywood;
+    }
+    td {
+        border: 2px solid darkred;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<body>
+    Here's a small subsample of my data!
+    <table id="dataTable">
+        
+    </table>
+</body>
+<script>
+    function makeTable(data){
+        let dataTable = document.getElementById("dataTable");
+        let keys = Object.keys(data[0]); // create an array of keys from the first object in data
+        let headerRow = dataTable.insertRow(0); // create the header row
+        
+        //create a header cell for each element in keys
+        for(let i = 0; i < keys.length; i++){
+            console.log(keys[i]);
+            let headerCell = document.createElement("th");
+            headerCell.innerHTML = keys[i];
+            headerRow.appendChild(headerCell);
+        }
+
+        //loop through the objects in data (the passed-in argument) to create the rows
+        for(let j = 0; j < data.length-1; j++){ 
+            let row = dataTable.insertRow(-1);
+            let dataPoint = data[j];
+            for(let k = 0; k < keys.length; k++){
+                let cell = row.insertCell(k);
+                let cellKey = keys[k];
+                cell.innerHTML = dataPoint[cellKey];
+            }
+        }
+    }
+    
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/Aug25_subsample.csv'
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            makeTable(result.data);
+        }
+    }
+    Papa.parse(dataURL, configPapa)
+</script>
+</html>
