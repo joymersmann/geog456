@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mersmann GEOG 456: September 1st Scatterplot</title>
+</head>
+<style>
+    #Instructions{
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: brown;
+        color: white;
+    }
+    #Description {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: burlywood;
+    }
+    #myPlot {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: salmon;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.14.0/plotly.min.js" integrity="sha512-XDnqTWsAcVl16AYJoBHumISzIYThowGjR67jeL53NSp6tajsq2qf5UeAWvk1n6Hp3M2iMsV/ewhPScBiLCDs9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<body>
+    <div id="Instructions"><i>Prompt:</i> Make a scatter plot, a bar plot, a polar plot and some other complex plot 
+        using Plotly and a dataset of your own interest that has a temporal component. Try to create 
+        figures that explore how a certain process changes through time. Each figure should be a 
+        single HTML file with a title and a short description of the limitations and benefits of the 
+        type of visualization used. Create an index.html page that has a link to each of the plots, 
+        and submit the link to the index.html file via Sakai.</div>
+    <div id="Description"><i>Description:</i> As a type of data visualization, scatterplots are most useful when 
+        displaying the relationship between two variables, particularly those which have a
+        probalistic relationship rather than a deterministic relationship (i.e. x-to-y is one-to-many
+        rather than one-to-one). Line plots -- which, in Plotly, appear to be grouped as a kind of
+        scatterplot -- are best at portraying two variables with a deterministic relationship; in 
+        data which have a temporal aspect, they are good for examining change over time. Scatterplots 
+        and lineplots can both be difficult to read when there are multiple subsets of data (as 
+        there are in my plot) being portrayed in the same space whose values may overlap. As seen 
+        in my plot below, the groundwater levels reported by the Naylor and Qulin stations are 
+        similar enough that their lines overlap; plots which may have many such overlapping lines 
+        may suffer from poor readability.
+    </div>
+    <div id="myPlot"> </div>
+</body>
+<script>
+    //helper function for parsing dates into a Plotly-accepted format
+    function formatDate(dateString) {
+        //dates will be coming in in format MM/DD/YYYY, and should go out in format YYYY-MM-DD
+        const dateArray = dateString.split('/')
+        const dateFormatted = dateArray[2]+'-'+dateArray[0]+'-'+dateArray[1]
+        return dateFormatted
+    }
+
+    //parse the CSV file into an array of objects with Papa.parse
+    function makePlot(dataParsed){
+        //convert the dataParsed into sets of arrays of values for the plot
+        let dataNaylorX = []
+        let dataNaylorY = []
+        let dataQulinX = []
+        let dataQulinY = []
+        let dataPoplarX = []
+        let dataPoplarY = []
+
+        for(let i = 0; i < dataParsed.length; i++){
+            if(dataParsed[i]["StationName"] == "Naylor"){
+                dataNaylorX.push(formatDate(dataParsed[i]["Date"]))
+                let gwFixed = dataParsed[i]["LandSurface_or_GageAltitude"] - dataParsed[i]["Groundwater_in_FeetBelowLandSurface"]
+                dataNaylorY.push(gwFixed)
+                //console.log("Got a Naylor point")
+            } else if(dataParsed[i]["StationName"] == "Qulin"){
+                dataQulinX.push(formatDate(dataParsed[i]["Date"]))
+                let gwFixed = dataParsed[i]["LandSurface_or_GageAltitude"] - dataParsed[i]["Groundwater_in_FeetBelowLandSurface"]
+                dataQulinY.push(gwFixed)
+                //console.log("Got a Qulin point")
+            } else if(dataParsed[i]["StationName"] == "Poplar Bluff"){
+                dataPoplarX.push(formatDate(dataParsed[i]["Date"]))
+                let gwFixed = dataParsed[i]["LandSurface_or_GageAltitude"] - dataParsed[i]["Groundwater_in_FeetBelowLandSurface"]
+                dataPoplarY.push(gwFixed)
+                //console.log("Got a Poplar Bluff point")
+            } else {
+                //do nothing
+                //console.log("Got a non-point")
+            }
+        }
+        //let dataX = data.map(e => e.Date)
+        //let dataY = data.map(e => Number(e.Groundwater_in_FeetBelowLandSurface)
+        
+        //convert the arrayified data into Plotly format and generate the Plot
+        let traceNaylor = {
+            x: dataNaylorX,
+            y: dataNaylorY,
+            mode: 'lines',
+            type: 'scatter',
+            marker: {
+                color: 'green'
+            },
+            name: 'Naylor'
+        }
+        let traceQulin = {
+            x: dataQulinX,
+            y: dataQulinY,
+            mode: 'lines',
+            type: 'scatter',
+            marker: {
+                color: 'red'
+            },
+            name: 'Qulin'
+        }
+        let tracePoplar = {
+            x: dataPoplarX,
+            y: dataPoplarY,
+            mode: 'lines',
+            type: 'scatter',
+            marker: {
+                color: 'blue'
+            },
+            name: 'Poplar Bluff'
+        }
+        var layout = {
+            xaxis: {
+                type: 'date',
+                title: 'Date of measurement'
+            },
+            yaxis: {
+                title: 'Groundwater level (feet above sea level)'
+            },
+            title: "Groundwater levels over time in Ripley and Butler Counties, MO"
+        };
+        var dataPlot = [traceNaylor, traceQulin, tracePoplar];
+        Plotly.newPlot("myPlot", dataPlot, layout);
+    }
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/RBGwData.csv'
+    var dataParsed = []
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            makePlot(result.data)
+        }
+    }
+    Papa.parse(dataURL, configPapa)
+
+    
+
+</script>
+</html>
