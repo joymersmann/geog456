@@ -30,13 +30,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.14.0/plotly.min.js" integrity="sha512-XDnqTWsAcVl16AYJoBHumISzIYThowGjR67jeL53NSp6tajsq2qf5UeAWvk1n6Hp3M2iMsV/ewhPScBiLCDs9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <body>
-    <div id="Instructions">Make a scatter plot, a bar plot, a polar plot and some other complex plot 
+    <div id="Instructions"> <i>Prompt:</i> Make a scatter plot, a bar plot, a polar plot and some other complex plot 
         using Plotly and a dataset of your own interest that has a temporal component. Try to create 
         figures that explore how a certain process changes through time. Each figure should be a 
         single HTML file with a title and a short description of the limitations and benefits of the 
         type of visualization used. Create an index.html page that has a link to each of the plots, 
         and submit the link to the index.html file via Sakai.</div>
-    <div id="Description"></div>
+    <div id="Description"> <i>Description:</i> As a kind of data visualization, polarplots are most
+        useful for displaying data that have some kind of cyclical continuity on the independent
+        variable; this is particularly useful when trying to display, for instance, average rainfall
+        over the course of a year, or average profit over the course of a financial cycle. However,
+        they can be misleading at best when used with data that are not cyclical. 
+    </div>
     <div id="myPlot"> </div>
 </body>
 <script>
@@ -47,9 +52,8 @@
         let startDate = new Date(2021, 8, 21)
         let thisDate = new Date(dateArray[2], dateArray[0], dateArray[1])
         let thetafied = Math.floor((thisDate - startDate)/86400000) * (360/365)
-        //console.log(thisDate + " minus " + startDate + " equals " + thetafied)
         return thetafied
-        //const dateFormatted = dateArray[2]+'-'+dateArray[0]+'-'+dateArray[1]
+        //const dateFormatted = dateArray[0]+'-'+dateArray[1]
         //return dateFormatted
     }
 
@@ -120,11 +124,21 @@
         }
         var layout = {
             title: "Groundwater levels from August 21st, 2021 to August 20th, 2022 in Ripley and Butler Counties, MO",
-            angularaxis: {
-                type: "category",
+            polar: {
+                angularaxis: {
+                    categoryarray: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    direction: "clockwise",
+                }
             }
         };
-        var dataPlot = [traceNaylor, traceQulin, tracePoplar];
+        var tryOne = {
+            type: "scatterpolar",
+            name: "angular categories",
+            r: [5, 4, 2, 4, 5],
+            theta: ["a", "b", "c", "d", "a"],
+            fill: "toself"
+        }
+        var dataPlot = [traceNaylor, tracePoplar, traceQulin];
         Plotly.newPlot("myPlot", dataPlot, layout);
     }
     const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/RBGwData.csv'
