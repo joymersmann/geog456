@@ -142,8 +142,7 @@
         download: true,
         header: true,
         complete: function(result){
-            //makePlot(result.data)
-            dataParsed = result.date
+            makePlot(result.data)
         }
     }
     Papa.parse(dataURL, configPapa)
