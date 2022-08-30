@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mersmann GEOG 456: September 1st Joyplot</title>
+</head>
+<style>
+    #Instructions{
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: brown;
+        color: white;
+    }
+    #Description {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: burlywood;
+    }
+    #myPlot {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: salmon;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.14.0/plotly.min.js" integrity="sha512-XDnqTWsAcVl16AYJoBHumISzIYThowGjR67jeL53NSp6tajsq2qf5UeAWvk1n6Hp3M2iMsV/ewhPScBiLCDs9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<body>
+    <div id="Instructions"><i>Prompt:</i> Make a scatter plot, a bar plot, a polar plot and some other complex plot 
+        using Plotly and a dataset of your own interest that has a temporal component. Try to create 
+        figures that explore how a certain process changes through time. Each figure should be a 
+        single HTML file with a title and a short description of the limitations and benefits of the 
+        type of visualization used. Create an index.html page that has a link to each of the plots, 
+        and submit the link to the index.html file via Sakai.</div>
+    <div id="Description"><i>Description:</i> As a type of data visualization, joyplots are useful 
+        for showing comparing groups of data without flattening variation within each group. Though
+        often used for showing change over time by grouping the temporal data into ranges, joyplots
+        can be used for comparing many different kinds of groups. Joyplots do, however, require that
+        the data be discretely groupable, and that the data be in some form numeric.
+    </div>
+    <div id="myPlot"> </div>
+</body>
+<script>
+    //helper function for parsing dates into a Plotly-accepted format
+    function getMonth(dateString){
+        if (dateString == null){
+            return "0"
+        }
+        const dateArray = dateString.split('/')
+        return dateArray[0]
+
+    }
+    function formatDate(dateString) {
+        //dates will be coming in in format MM/DD/YYYY, and should go out in format YYYY-MM-DD
+        const dateArray = dateString.split('/')
+        const dateFormatted = dateArray[2]+'-'+dateArray[0]+'-'+dateArray[1]
+        return dateFormatted
+    }
+
+    //parse the CSV file into an array of objects with Papa.parse
+    function makePlot(dataParsed){
+        //group the data by MONTH, not by site 
+            //ignore the Poplar Bluff data, it won't help here -- too far away from the other station
+        //convert the dataParsed into sets of arrays of values for the plot
+        let yJanuary = []
+        let yFebruary = []
+        let yMarch = []
+        let yApril = []
+        let yMay = []
+        let yJune = []
+        let yJuly = []
+        let yAugust = []
+        let ySeptember = []
+        let yOctober = []
+        let yNovember = []
+        let yDecember = []
+
+        for(let i = 0; i < dataParsed.length; i++){
+            if (dataParsed[i]["StationName"] == "Poplar Bluff") {
+                continue;
+            }
+            let gwFixed = dataParsed[i]["LandSurface_or_GageAltitude"] - dataParsed[i]["Groundwater_in_FeetBelowLandSurface"]
+            if(getMonth(dataParsed[i]["Date"]) == "1"){
+                yJanuary.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "2") {
+                yFebruary.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "3") {
+                yMarch.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "4") {
+                yApril.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "5") {
+                yMay.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "6") {
+                yJune.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "7") {
+                yJuly.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "8") {
+                yAugust.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "9") {
+                ySeptember.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "10") {
+                yOctober.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "11") {
+                yNovember.push(gwFixed)
+            } else if (getMonth(dataParsed[i]["Date"]) == "12") {
+                yDecember.push(gwFixed)
+            } else {
+                //do nothing
+                //console.log("Got a non-point")
+            }
+        }
+
+        //convert the arrayified data into Plotly format and generate the Plot
+        let January = {
+            y: yJanuary,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "January", 
+            name: "January"
+        }
+        let February = {
+            y: yFebruary,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "February",
+            name: "February"
+        }
+        let March = {
+            y: yMarch,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "March",
+            name: "March"
+        }
+        let April = {
+            y: yApril,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "April",
+            name: "April"
+        }
+        let May = {
+            y: yMay,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "May",
+            name: "May"
+        }
+        let June = {
+            y: yJune,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "June",
+            name: "June"
+        }
+        let July = {
+            y: yJuly,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "July",
+            name: "July"
+        }
+        let August = {
+            y: yAugust,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "August",
+            name: "August"
+        }
+        let September = {
+            y: ySeptember,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "September",
+            name: "September"
+        }
+        let October = {
+            y: yOctober,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "October",
+            name: "October"
+        }
+        let November = {
+            y: yNovember,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "November",
+            name: "November"
+        }
+        let December = {
+            y: yDecember,
+            type: 'violin',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "December",
+            name: "December"
+        }
+        var layout = {
+            title: "Groundwater level (feet above sea level) from the Naylor and Qulin monitoring stations by month from August 2021 to August 2022",
+            yaxis: {
+                zeroline: false
+            }
+        };
+        var dataPlot = [January, February, March, April, May, June, July, August, September, October, November, December];
+        Plotly.newPlot("myPlot", dataPlot, layout);
+    }
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/RBGwData.csv'
+    var dataParsed = []
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            makePlot(result.data)
+        }
+    }
+    Papa.parse(dataURL, configPapa)
+
+    
+
+</script>
+</html>
