@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+<style>
+    #Instructions{
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: brown;
+        color: white;
+    }
+    #Description {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 100%;
+        background-color: burlywood;
+    }
+    #myPlot {
+        border: 1px solid darkred;
+        width: 100%;
+        height: 500px;
+        background-color: salmon;
+    }
+</style>
+<body>
+    <div id="Instructions"><b>Instructions:</b> Make a leaflet map of a region other than Chapel Hill. The map must have an OSM tile background, a marker and the marker must have a popup with information about the place indicated.</div>
+    <div id="Description"></div>
+    <div id="myPlot">  </div>
+</body>
+<script>
+    var map = L.map('myPlot').setView([36.558, -90.538], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+    var marker = L.marker([36.558, -90.538]).addTo(map);
+    marker.bindPopup("This is the approximate location of the sites of <b>Turner</b> and <b>Snodgrass</b>, on which my dissertation focuses.").openPopup();
+</script>
+</html>
