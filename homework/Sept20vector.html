@@ -28,16 +28,52 @@ crossorigin=""/>
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
-    var marker = L.marker([36.558, -90.538]).addTo(map);
 
-    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/StationData.csv'
+    function convertJSONtoGeoJSON(dataJSON){
+        // Process the dataJSON into a GeoJSON FeatureCollection
+        var featureArray = [];
+        for (var i = 0; i < dataJSON.length; i++) {
+            var lat = parseFloat(dataJSON[i].Latitude);
+            var long = parseFloat(dataJSON[i].Longitude);
+            var coords = [lat/10000, long/10000];
+
+            var feature = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": coords,
+                },
+                "properties": {
+                    "Station": dataJSON[i].StationName,
+                    "Date": dataJSON[i].Date,
+                    "GroundwaterLevel": dataJSON[i].Groundwater_in_FeetBelowLandSurface,
+                }
+            }
+            featureArray.push(feature);
+        }
+        /* var dataGeoJSON = {
+            "type": "FeatureCollection",
+            "features": featureArray,
+        }; */
+        return featureArray;
+    }
+
+    // bring in the CSV data and Papa.parse it to JSON
+    var featureArray;
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/RBGwData.csv'
     const configPapa = {
         download: true,
         header: true,
         complete: function(result){
-            makeTable(result.data);
+            featureArray = convertJSONtoGeoJSON(result.data);
+            var tryme = L.geoJSON(featureArray[0]).addTo(map);
+            var marker = L.marker([36.558, -90.538]).addTo(map);
         }
     }
+    Papa.parse(dataURL, configPapa);
+
+    //
+    
     
 </script>
 </html>
