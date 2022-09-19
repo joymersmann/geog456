@@ -1,0 +1,65 @@
+===JoyStyle => it's my stylesheet====
+<link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
+
+
+
+
+
+
+====PapaParse => for converting CSV to JSON====
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/Aug25_subsample.csv'
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            makeTable(result.data);
+        }
+    }
+    function makeTable(data){
+            let dataTable = document.getElementById("dataTable");
+            let keys = Object.keys(data[0]); // create an array of keys from the first object in data
+            let headerRow = dataTable.insertRow(0); // create the header row
+            
+            //create a header cell for each element in keys
+            for(let i = 0; i < keys.length; i++){
+                console.log(keys[i]);
+                let headerCell = document.createElement("th");
+                headerCell.innerHTML = keys[i];
+                headerRow.appendChild(headerCell);
+            }
+
+            //loop through the objects in data (the passed-in argument) to create the rows
+            for(let j = 0; j < data.length-1; j++){ 
+                let row = dataTable.insertRow(-1);
+                let dataPoint = data[j];
+                for(let k = 0; k < keys.length; k++){
+                    let cell = row.insertCell(k);
+                    let cellKey = keys[k];
+                    cell.innerHTML = dataPoint[cellKey];
+                }
+            }
+    }
+</script>
+
+
+
+
+
+
+====Leaflet => for making maps====
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+<script>
+    var map = L.map('myPlot').setView([36.558, -90.538], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+</script>

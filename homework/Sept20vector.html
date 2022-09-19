@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sept 20th Vector Data on Leaflet Assignment</title>
+</head>
+
+<link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<body>
+    <div id="Instructions"><b>Instructions:</b> Make a leaflet map using a dataset that has a temporal component. Use a button or a slider to control how features that have a variable related to time are displayed.</div>
+    <div id="Description"></div>
+    <div id="myPlot">  </div>
+</body>
+<script>
+    var map = L.map('myPlot').setView([36.558, -90.538], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+    var marker = L.marker([36.558, -90.538]).addTo(map);
+
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/StationData.csv'
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            makeTable(result.data);
+        }
+    }
+    
+</script>
+</html>

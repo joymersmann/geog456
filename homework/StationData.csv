@@ -1,0 +1,4 @@
+Agency,SiteNumber,StationName,Latitude,Longitude,CoordinateAccuracy,CoordinateDatum,CountyCode,LandSurface_or_GageAltitude
+USGS,363442090364301.00,Naylor,363445.2,903646.6,1,NAD83,181,303
+USGS,363551090152801.00,Qulin,363554.5,901537.4,1,NAD83,23,315
+USGS,365141090304001.00,Poplar Bluff,365141.09,903040.18,5,NAD83,23,600
