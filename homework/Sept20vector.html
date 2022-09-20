@@ -19,11 +19,12 @@ crossorigin=""/>
 
 <body>
     <div id="Instructions"><b>Instructions:</b> Make a leaflet map using a vector dataset that has a temporal component.</div>
-    <div id="Description"></div>
+    <div id="Description"> The data portrayed on this leaflet map is groundwater level recordings from August 2021 to August 2022 from three stations. Because this data is from only three stations, the markers on the map overlap to a significant degree. 
+        To attempt to offset this, I set the markers on the map to be partially transparent, and I set them up such that their radii were proportional to the measurement of groundwater depth; the greater the depth, the large the radius of the marker.</div>
     <div id="myPlot">  </div>
 </body>
 <script>
-    var map = L.map('myPlot').setView([36.558, -90.538], 13);
+    var map = L.map('myPlot').setView([36.558, -90.538], 9);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
@@ -35,12 +36,7 @@ crossorigin=""/>
         for (var i = 0; i < dataJSON.length-1; i++) {
             var lat = parseFloat(dataJSON[i].Latitude);
             var long = parseFloat(dataJSON[i].Longitude);
-            var coordParsed = [long, lat];
-            console.log(coordParsed);
-            //console.log("Now convert it!");
-            //console.log(helpme);
-            //FIXME
-            var coords = [-90.539, 36.559];
+            var coords = [long, lat];
 
             var feature = {
                 "type": "Feature",
@@ -64,6 +60,7 @@ crossorigin=""/>
         return dataGeoJSON;
     }
 
+
     // bring in the CSV data and Papa.parse it to JSON, then GeoJSON
     var data;
     const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/RBGwData.csv'
@@ -72,11 +69,21 @@ crossorigin=""/>
         header: true,
         complete: function(result){
             data = convertJSONtoGeoJSON(result.data);
-            L.geoJSON(data).addTo(map);
-            console.log("Hit the end of the Papa.parse!");
+            L.geoJSON(data, {
+                pointToLayer: function (feature, latlng) {
+                    console.log(feature.properties.GroundwaterLevel);
+                    return L.circleMarker(latlng, {
+                        radius: feature.properties.GroundwaterLevel,
+                        fillColor: "#ff7800",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.25
+                    });
+                }
+            }).addTo(map);
         }
     }
     Papa.parse(dataURL, configPapa);
-    //console.log("Ready to show the data?");
 </script>
 </html>
