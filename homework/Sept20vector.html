@@ -18,7 +18,7 @@ crossorigin=""/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <body>
-    <div id="Instructions"><b>Instructions:</b> Make a leaflet map using a dataset that has a temporal component. Use a button or a slider to control how features that have a variable related to time are displayed.</div>
+    <div id="Instructions"><b>Instructions:</b> Make a leaflet map using a vector dataset that has a temporal component.</div>
     <div id="Description"></div>
     <div id="myPlot">  </div>
 </body>
@@ -32,10 +32,15 @@ crossorigin=""/>
     function convertJSONtoGeoJSON(dataJSON){
         // Process the dataJSON into a GeoJSON FeatureCollection
         var featureArray = [];
-        for (var i = 0; i < dataJSON.length; i++) {
+        for (var i = 0; i < dataJSON.length-1; i++) {
             var lat = parseFloat(dataJSON[i].Latitude);
             var long = parseFloat(dataJSON[i].Longitude);
-            var coords = [lat/10000, long/10000];
+            var coordParsed = [long, lat];
+            console.log(coordParsed);
+            //console.log("Now convert it!");
+            //console.log(helpme);
+            //FIXME
+            var coords = [-90.539, 36.559];
 
             var feature = {
                 "type": "Feature",
@@ -51,29 +56,27 @@ crossorigin=""/>
             }
             featureArray.push(feature);
         }
-        /* var dataGeoJSON = {
+        var dataGeoJSON = {
             "type": "FeatureCollection",
             "features": featureArray,
-        }; */
-        return featureArray;
+        }; 
+        console.log("Hit the end of the convert function!");
+        return dataGeoJSON;
     }
 
-    // bring in the CSV data and Papa.parse it to JSON
-    var featureArray;
+    // bring in the CSV data and Papa.parse it to JSON, then GeoJSON
+    var data;
     const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/RBGwData.csv'
     const configPapa = {
         download: true,
         header: true,
         complete: function(result){
-            featureArray = convertJSONtoGeoJSON(result.data);
-            var tryme = L.geoJSON(featureArray[0]).addTo(map);
-            var marker = L.marker([36.558, -90.538]).addTo(map);
+            data = convertJSONtoGeoJSON(result.data);
+            L.geoJSON(data).addTo(map);
+            console.log("Hit the end of the Papa.parse!");
         }
     }
     Papa.parse(dataURL, configPapa);
-
-    //
-    
-    
+    //console.log("Ready to show the data?");
 </script>
 </html>
