@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sept 20th Slider Assignment</title>
+    <title>Sept 22nd Vector Data with Time Slider on Leaflet Assignment</title>
 </head>
+<style>
+    .slidecontainer {
+        width: 100%; /* Width of the outside container */
+    }
+</style>
+
 <link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
 integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
@@ -14,18 +20,204 @@ crossorigin=""/>
  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
    crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js" integrity="sha512-SGWgwwRA8xZgEoKiex3UubkSkV1zSE1BS6O4pXcaxcNtUlQsOmOmhVnDwIvqGRfEmuz83tIGL13cXMZn6upPyg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <body>
     <div id="Instructions"><b>Instructions:</b> Make a leaflet map using a dataset that has a temporal component. Use a button or a slider to control how features that have a variable related to time are displayed.</div>
-    <div id="Description"></div>
+    <div id="Description" class="slidecontainer">
+        The data show here is groundwater level in Butler and Ripley counties of Southern Missouri, as measured by three USGS measuring stations: Naylor, Qulin, and Poplar Bluff. The tan circles show the ground surface in terms of feet above sea level; the blue circles show where the groundwater levels are in relation to the land surface.
+        <p id="dateHTML">Date goes here!</p>
+        <input type="range" min="0" max="364" value="0" class="slider" id="myRange" style="width:100%">
+      </div>
     <div id="myPlot">  </div>
 </body>
+
 <script>
-    var map = L.map('myPlot').setView([36.558, -90.538], 13);
+    // setting up the map
+    var map = L.map('myPlot').setView([36.558, -90.538], 9);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
-    var marker = L.marker([36.558, -90.538]).addTo(map);
-    //marker.bindPopup("This is the approximate location of the sites of <b>Turner</b> and <b>Snodgrass</b>, on which my dissertation focuses.").openPopup();
+
+    // set up the slider functions
+    var slider = document.getElementById("myRange");
+    var showDate = document.getElementById("dateHTML");
+    slider.value = 0;
+    // adding the landSurface circles!
+    var landSurface = L.geoJSON({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-90.6129444, 36.5792222],
+                    },
+                    "properties": {
+                        "Station": "Naylor",
+                        "Date": "No date",
+                        "LandSurface": 303,
+                    }
+                }, {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-90.2603889, 36.5984722],
+                    },
+                    "properties": {
+                        "Station": "Qulin",
+                        "Date": "No date",
+                        "LandSurface": 315,
+                    }
+                }, {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [-90.5111611, 36.86141389],
+                    },
+                    "properties": {
+                        "Station": "Poplar Bluff",
+                        "Date": "No date",
+                        "LandSurface": 600,
+                    }
+                }
+
+                ]
+            }, {
+                pointToLayer: function (feature, latlng) {
+                    //console.log(feature.properties.GroundwaterLevel);
+                    return L.circleMarker(latlng, {
+                        radius: feature.properties.LandSurface / 6,
+                        fillColor: "#d2b48c",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.25
+                    });
+                }
+            }).addTo(map);
+    var dataLayer = L.geoJSON({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-90.538, 36.558],
+                },
+                "properties": {
+                    "Station": "Testing",
+                    "Date": "No date",
+                    "GroundwaterLevel": 8,
+                }
+            }, {
+                pointToLayer: function (feature, latlng) {
+                    //console.log(feature.properties.GroundwaterLevel);
+                    return L.circleMarker(latlng, {
+                        radius: feature.properties.GroundwaterLevel,
+                        fillColor: "#007800",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.25
+                    });
+                }
+            }).addTo(map);
+ 
+
+    // helper function for parsing dates
+    function formatDate(dateString) {
+        //dates will be coming in in format MM/DD/YYYY, and should go out in format ###(th day of the year)
+        const dateArray = dateString.split('/')
+        let startDate = new Date(2021, 8, 21)
+        let thisDate = new Date(dateArray[2], dateArray[0], dateArray[1])
+        let dateNum = Math.floor((thisDate - startDate)/86400000)
+        return dateNum
+    }
+
+    // bring in the CSV data and Papa.parse it to JSON, then pass it on to the next step: GeoJSON conversion
+    var arrayFeatCol;
+    const dataURL = 'https://raw.githubusercontent.com/joymersmann/geog456/main/homework/RBGwData.csv'
+    const configPapa = {
+        download: true,
+        header: true,
+        complete: function(result){
+            // convert the JSON to a geoJSON
+            arrayFeatCol = convertJSONtoGeoJSON(result.data);
+
+            //add the GeoJSON to the map
+            changeTime(slider.value);
+        }
+    }
+
+    // Process the dataJSON into a GeoJSON FeatureCollection
+    function convertJSONtoGeoJSON(dataJSON){
+        var collectionArray = [];
+        var featureArray = new Array(365);
+        // set up the date-specific arrays inside featureArray
+        for (var f = 0; f < featureArray.length; f++){
+            featureArray[f] = [];
+        }
+        // populate featureArray's arrays
+        for (var i = 0; i < dataJSON.length-1; i++) {
+            var lat = parseFloat(dataJSON[i].Latitude);
+            var long = parseFloat(dataJSON[i].Longitude);
+            var coords = [long, lat];
+            var date = formatDate(dataJSON[i].Date);//FIXME parse date into a number
+
+            var feature = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": coords,
+                },
+                "properties": {
+                    "Station": dataJSON[i].StationName,
+                    "Date": dataJSON[i].Date, 
+                    "GroundwaterLevel": dataJSON[i].Groundwater_in_FeetBelowLandSurface,
+                    "LandSurface": dataJSON[i].LandSurface_or_GageAltitude,
+                }
+            }
+            featureArray[date].push(feature);
+        }
+        // turn the arrays of features organized by date into FeatureCollections
+        for (var j = 0; j < featureArray.length; j++){
+            var collection = {
+                "type": "FeatureCollection",
+                "features": featureArray[j],
+            }; 
+            collectionArray.push(collection);
+        }
+        console.log("Hit the end of the convert function!");
+        return collectionArray;
+    }
+
+    function changeTime (timeValue) {
+        // update the layer on the map
+        map.removeLayer(dataLayer);
+        dataLayer = L.geoJSON(arrayFeatCol[timeValue], {
+                pointToLayer: function (feature, latlng) {
+                    var r = (feature.properties.LandSurface - feature.properties.GroundwaterLevel) / 6;
+                    return L.circleMarker(latlng, {
+                        radius: r,
+                        fillColor: "#007890",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.25
+                    });
+                }
+            }).addTo(map);
+        // update the date in showDate
+        showDate.innerHTML = arrayFeatCol[timeValue].features[0].properties.Date + 
+            " -- Groundwater (feet below sea level) at Naylor: " + arrayFeatCol[timeValue].features[0].properties.GroundwaterLevel + 
+            ", Qulin: " + arrayFeatCol[timeValue].features[1].properties.GroundwaterLevel + 
+            ", and Poplar Bluff: " + arrayFeatCol[timeValue].features[2].properties.GroundwaterLevel;
+    }
+    
+    // connecting the movement of the slider to the changing of the dataLayer
+    slider.oninput = function() {
+        changeTime(this.value);
+    }
+
+    // Start the parse
+    Papa.parse(dataURL, configPapa);
 </script>
 </html>
