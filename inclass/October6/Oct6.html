@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>October 6th In-Class Assignment</title>
+</head>
+<style>
+    img {
+        position: absolute;
+    }
+    .visible {
+        visibility: visible;
+    }
+    .hidden {
+        visibility: hidden;
+    }
+</style>
+<body>
+    <div id="container">
+        <img id="y2007" class="visible" src="./png/october6_2007.png" alt="">
+        <!-- <img src="./png/october6_2012.png" alt=""> -->
+        <img id="y2020" class="hidden" src="./png/october6_2020.png" alt="">
+    </div>
+</body>
+<script>
+    var myContainer = document.getElementById('container');
+    myContainer.addEventListener('click', classSwapMethod);
+    /*function flickerMethod () {
+        var flicker = document.getElementsByClassName('hidden');
+         for (var i = 0; i < flicker.length; i++){
+            var visib = flicker[i].style.visibility;
+            if (visib == 'hidden'){
+                flicker[i].style.visibility = 'visible';
+            } else {
+                flicker[i].style.visibility = 'hidden';
+            }
+        } 
+    }*/
+    function classSwapMethod () {
+        var off = document.getElementsByClassName('hidden')[0];
+        var on = document.getElementsByClassName('visible')[0];
+        off.className = 'visible';
+        on.className = 'hidden';
+    }
+</script>
+</html>

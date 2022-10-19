@@ -96,6 +96,7 @@ crossorigin=""/>
                     });
                 }
             }).addTo(map);
+
     var dataLayer = L.geoJSON({
                 "type": "Feature",
                 "geometry": {
@@ -160,7 +161,7 @@ crossorigin=""/>
             var lat = parseFloat(dataJSON[i].Latitude);
             var long = parseFloat(dataJSON[i].Longitude);
             var coords = [long, lat];
-            var date = formatDate(dataJSON[i].Date);//FIXME parse date into a number
+            var date = formatDate(dataJSON[i].Date);
 
             var feature = {
                 "type": "Feature",
