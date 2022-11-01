@@ -11,9 +11,10 @@
     #myPlot {
         height: 100%;
     }
+    * {box-sizing: border-box;}
     .img-comp-container {
         position: relative;
-        height: 100%; /*should be the same height as the images*/
+        height: 604; /*should be the same height as the images*/
     }
 
     .img-comp-img {
@@ -71,6 +72,8 @@
             /* Get the width and height of the img element */
             w = img.offsetWidth;
             h = img.offsetHeight;
+            console.log(w)
+            console.log(h)
             /* Set the width of the img element to 50%: */
             img.style.width = (w / 2) + "px";
             /* Create slider: */
@@ -94,6 +97,7 @@
                 e.preventDefault();
                 /* The slider is now clicked and ready to move: */
                 clicked = 1;
+                console.log("Ready")
                 /* Execute a function when the slider is moved: */
                 window.addEventListener("mousemove", slideMove);
                 window.addEventListener("touchmove", slideMove);
