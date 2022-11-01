@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
 </head>
 <style>
-    #myPlot {
-        height: 100%;
-    }
     * {box-sizing: border-box;}
     .img-comp-container {
         position: relative;
@@ -70,7 +67,7 @@
         function compareImages(img) {
             var slider, img, clicked = 0, w, h;
             /* Get the width and height of the img element */
-            //console.log(img)
+            console.log(img)
             w = img.offsetWidth;
             h = img.offsetHeight;
             //console.log(w)
@@ -98,7 +95,6 @@
                 e.preventDefault();
                 /* The slider is now clicked and ready to move: */
                 clicked = 1;
-                console.log("Ready")
                 /* Execute a function when the slider is moved: */
                 window.addEventListener("mousemove", slideMove);
                 window.addEventListener("touchmove", slideMove);
