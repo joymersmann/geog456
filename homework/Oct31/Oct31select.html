@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>October 31st Interactive GEE: Side-by-side</title>
+    <link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
+</head>
+<style>
+    img {
+        position: absolute;
+    }
+    .visible {
+        visibility: visible;
+    }
+    .hidden {
+        visibility: hidden;
+    }
+    #myPlot {
+        height: 100%;
+    }
+</style>
+<body>
+    <div id="Instructions">Create four HTML documents displaying the changes in the landscape using the exported PNG images from GEE using the NAIP dataset.
+        Another page should use buttons to select among three images (bonus if you can also add text that changes as you change the image).
+    </div>
+    <div id="Description"> 
+        A growing warehouse district near St. Louis, MO in 2007. <br> <button type="button" onclick="turnOn2007()">2007</button>   <button type="button" onclick="turnOn2012()">2012</button>   <button type="button" onclick="turnOn2019()">2019</button> 
+    </div>
+    <div id="myPlot">
+        <img id="y2007" class="visible" src="./png/2007.png" alt="">
+        <img id="y2012" class="hidden" src="./png/2012.png" alt="">
+        <img id="y2019" class="hidden" src="./png/2019.png" alt="">
+    </div>
+</body>
+<script>
+    var descrip = document.getElementById("Description");
+    function turnOn2007 () {
+        clearAll();
+        document.getElementById("y2007").className = "visible";
+
+        descrip.innerHTML = 'A growing warehouse district near St. Louis, MO in 2007. <br> <button type="button" onclick="turnOn2007()">2007</button>   <button type="button" onclick="turnOn2012()">2012</button>   <button type="button" onclick="turnOn2019()">2019</button>';
+    }
+    function turnOn2012 () {
+        clearAll();
+        document.getElementById("y2012").className = "visible";
+
+        descrip.innerHTML = 'A growing warehouse district near St. Louis, MO in 2012. <br> <button type="button" onclick="turnOn2007()">2007</button>   <button type="button" onclick="turnOn2012()">2012</button>   <button type="button" onclick="turnOn2019()">2019</button>';
+    }
+    function turnOn2019 () {
+        clearAll();
+        document.getElementById("y2019").className = "visible";
+
+        descrip.innerHTML = 'A growing warehouse district near St. Louis, MO in 2019. <br> <button type="button" onclick="turnOn2007()">2007</button>   <button type="button" onclick="turnOn2012()">2012</button>   <button type="button" onclick="turnOn2019()">2019</button>';
+    }
+    function clearAll() {
+        document.getElementById("y2007").className = "hidden";
+        document.getElementById("y2012").className = "hidden";
+        document.getElementById("y2019").className = "hidden";
+
+    }
+</script>
+</html>

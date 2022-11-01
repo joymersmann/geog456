@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>October 31st Interactive GEE: Side-by-side</title>
+    <link rel="stylesheet" href="https://joymersmann.github.io/geog456/joystyle.css">
+</head>
+<style>
+    img {
+        position: absolute;
+    }
+    .visible {
+        visibility: visible;
+    }
+    .hidden {
+        visibility: visible;
+        opacity: 0;
+    }
+    #myPlot {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+    <div id="Instructions">Create four HTML documents displaying the changes in the landscape using the exported PNG images from GEE using the NAIP dataset.
+        Another page should show the change of one image to another using a range (scrollbar) that controls the opacity of an image. 
+    </div>
+    <div id="Description">A growing warehouse district near St. Louis, MO. <br>
+        2007 <input type="range" id="visibility" min="0" max="1" value="0" step="0.05" oninput="changeVisib(this.value)"/> 2019
+    </div>
+    <div id="myPlot">
+        <img id="y2007" class="visible" src="./png/2007.png" alt="">
+        <img id="y2019" class="hidden" src="./png/2019.png" alt="">
+    </div>
+</body>
+<script>
+    var y2019 = document.getElementById('y2019');
+    function changeVisib (visval) {
+        y2019.style.opacity = visval;
+    }
+</script>
+</html>
