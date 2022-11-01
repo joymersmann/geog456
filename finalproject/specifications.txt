@@ -1,0 +1,51 @@
+Limits:
+    - Space: 40x40km square centered on Turner site
+        - Center: lat 36.55 long -90.55                         WGS84
+          Northline: lat 36.73 aka 36° 43' 47.9994"
+          Southline: lat 36.37 aka 36° 22' 11.9994"
+          Eastline: long -90.33 aka -90° 19' 47.9994"
+          Westline: long -90.77 aka -90° 46' 11.9994"
+          NE 36.73 -90.33
+          SE 36.37 -90.33
+          SW 36.37 -90.77
+          NW 36.73 -90.77
+    - Time: 1 January 2017 - 31 December 2021 === FIXME, MAY BE SUBJECT TO CHANGE
+    - Interval: Daily
+
+Data:
+    - Precipitation
+        - source: https://water.weather.gov/precip/index.php
+        - format: netCDF
+        - filename: precip-YYYYMMDD.nc === FIXME NEEDS FORMATTING
+        - resolution 4 by 4 kilometer
+    - Surface/ground water
+        - source: https://maps.waterdata.usgs.gov/mapper 
+        - filename: surfacewater-STATIONNUMBER-YYYYMM
+                    groundwater-STATIONNUMBER-YYYYMM
+        - resolution: point
+    - NDVI
+        - source: https://www.ncei.noaa.gov/products/climate-data-records/normalized-difference-vegetation-index
+        - format: netCDF
+        - filename: NDVI-YYYYMMDD.nc 
+        - resolution: 0.05° by 0.05°
+
+Architecture:
+    - OpenLayers
+    - ncWMS?/netcdfjs?
+        - https://stackoverflow.com/questions/25393611/netcdf-format-to-openlayers-map 
+        - https://github.com/cheminfo/netcdfjs
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v5.3.0/build/ol.js"></script>
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v5.3.0/css/ol.css" type="text/css">
+        
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/Map.min.js" integrity="sha512-VHEH+gECTYxkL3lFJ1OnzHwW4ajPiHpE8zLvm6NcP/dRRQk9Zkq+hgjFQU6E8eRP5crajntx90bhHQMARG33RQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/View.min.js" integrity="sha512-qGj5P/lTXcA8TngwaQZHFSrl81blswgwPtAoCNsmGggCbKm18WW73ovycZQEtGuEX1Wd4jeQeQBC79Hc/RdLrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/source/OSM.min.js" integrity="sha512-CDadLYY1wgYlvpDlb4tm87eWKCmayEKmzeajg+z6ZJaDTR0eI1dnFuPm6dhmBk3h/esQb6L+qQI988YeeQroAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/layer/Tile.min.js" integrity="sha512-/KVicmt+0hJ1SdftYoTgKlxg7T+hE9EJvi2V0SwpRaEP7KhC5on3mSDJnHuAbuRVxmV9cH9vpKNUXCWgBv96sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

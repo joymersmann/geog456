@@ -1,0 +1,60 @@
+# ---------------------------------- WARNING ----------------------------------------
+# Some of the data that you have obtained from this U.S. Geological Survey database
+# may not have received Director's approval. Any such data values are qualified
+# as provisional and are subject to revision. Provisional data are released on the
+# condition that neither the USGS nor the United States Government may be held liable
+# for any damages resulting from its use.
+#
+# Additional info: https://help.waterdata.usgs.gov/policies/provisional-data-statement
+#
+# File-format description:  https://help.waterdata.usgs.gov/faq/about-tab-delimited-output
+# Automated-retrieval info: https://help.waterdata.usgs.gov/faq/automated-retrievals
+#
+# Contact:   gs-w_waterdata_support@usgs.gov
+# retrieved: 2022-10-24 16:26:22 EDT       (caww02)
+#
+# Data for the following 1 site(s) are contained in this file
+#    USGS 07068510 Little Black River below Fairdealing, MO
+# -----------------------------------------------------------------------------------
+#
+# Data provided for site 07068510
+#            TS   parameter     statistic     Description
+#         76367       00060     00003     Discharge, cubic feet per second (Mean)
+#         76368       00065     30800     Gage height, feet (Observation at 08:00 AM)
+#
+# Data-value qualification codes included in this output:
+#     A  Approved for publication -- Processing and review completed.
+# 
+agency_cd	site_no	datetime	76367_00060_00003	76367_00060_00003_cd	76368_00065_30800	76368_00065_30800_cd
+5s	15s	20d	14n	10s	14n	10s
+USGS	07068510	2021-01-01	580	A	8.07	A
+USGS	07068510	2021-01-02	865	A	11.10	A
+USGS	07068510	2021-01-03	582	A	9.16	A
+USGS	07068510	2021-01-04	455	A	8.13	A
+USGS	07068510	2021-01-05	385	A	7.47	A
+USGS	07068510	2021-01-06	331	A	6.93	A
+USGS	07068510	2021-01-07	317	A	6.63	A
+USGS	07068510	2021-01-08	355	A	6.99	A
+USGS	07068510	2021-01-09	366	A	7.27	A
+USGS	07068510	2021-01-10	325	A	6.86	A
+USGS	07068510	2021-01-11	285	A	6.41	A
+USGS	07068510	2021-01-12	254	A	6.03	A
+USGS	07068510	2021-01-13	242	A	5.75	A
+USGS	07068510	2021-01-14	250	A	5.96	A
+USGS	07068510	2021-01-15	233	A	5.82	A
+USGS	07068510	2021-01-16	201	A	5.36	A
+USGS	07068510	2021-01-17	181	A	5.06	A
+USGS	07068510	2021-01-18	169	A	4.88	A
+USGS	07068510	2021-01-19	159	A	4.72	A
+USGS	07068510	2021-01-20	150	A	4.56	A
+USGS	07068510	2021-01-21	144	A	4.46	A
+USGS	07068510	2021-01-22	139	A	4.38	A
+USGS	07068510	2021-01-23	132	A	4.27	A
+USGS	07068510	2021-01-24	132	A	4.26	A
+USGS	07068510	2021-01-25	1260	A	6.77	A
+USGS	07068510	2021-01-26	3210	A	16.51	A
+USGS	07068510	2021-01-27	1490	A	13.47	A
+USGS	07068510	2021-01-28	661	A	9.75	A
+USGS	07068510	2021-01-29	492	A	8.42	A
+USGS	07068510	2021-01-30	476	A	7.90	A
+USGS	07068510	2021-01-31	755	A	9.89	A
