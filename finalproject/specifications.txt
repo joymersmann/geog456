@@ -1,3 +1,19 @@
+TO DO:
+- clip at least a few rasters so you have something to show
+- automate the clipping process 
+
+
+The clipping process
+- clip by the shapefile clipattempt2
+- save the results to 
+    C:\dev\GEOG456Fall2022\geog456\finalproject\data\precip\YYYYMMDD.tif
+        or
+    C:\dev\GEOG456Fall2022\geog456\finalproject\data\NDVI\YYYYMMDD.tif
+
+
+
+
+
 Limits:
     - Space: 40x40km square centered on Turner site
         - Center: lat 36.55 long -90.55                         WGS84
