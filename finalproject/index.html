@@ -78,7 +78,7 @@
     fetch('data/NDVI/20210101.tif')
   .then((response) => response.blob())
   .then((blob) => {
-    const source = new GeoTIFF({
+    const source = new ol.source.GeoTIFF({
       sources: [
         {
           blob: blob,
@@ -86,10 +86,10 @@
       ],
     });
 
-    const map = new Map({
+    const map = new ol.Map({
       target: 'map',
       layers: [
-        new TileLayer({
+        new ol.layer.Tile({
           source: source,
         }),
       ],
