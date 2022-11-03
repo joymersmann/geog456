@@ -51,13 +51,13 @@
 </body>
 
 <script>
-    const trymedata = "./data/NDVI/20210101.tif";
+    /*const trymedata = "./data/NDVI/20210101.tif";
     const turnerLonLat = [-90.55, 36.55];
     var turnerWM = ol.proj.fromLonLat(turnerLonLat);
     const myMap = new ol.Map({
         layers: [
             new ol.layer.Tile({source: new ol.source.OSM()}),
-            /* new ol.layer.Tile({
+            new ol.layer.Tile({
                 source: new ol.source.GeoTIFF({
                     sources: [
                         {
@@ -65,7 +65,7 @@
                         },
                     ],
                 }),
-            }),*/
+            }),
         ],
         view: new ol.View({
             projection: 'EPSG:3857', // here is the view projection
@@ -73,7 +73,32 @@
             zoom: 10,
         }),
         target: 'map',
+    });*/
+
+    fetch('data/NDVI/20210101.tif')
+  .then((response) => response.blob())
+  .then((blob) => {
+    const source = new GeoTIFF({
+      sources: [
+        {
+          blob: blob,
+        },
+      ],
     });
+
+    const map = new Map({
+      target: 'map',
+      layers: [
+        new TileLayer({
+          source: source,
+        }),
+      ],
+      view: source.getView().then((viewConfig) => {
+        viewConfig.showFullExtent = true;
+        return viewConfig;
+      }),
+    });
+  });
 
     
     /*const min = 10000;
