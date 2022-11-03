@@ -1,6 +1,16 @@
 TO DO:
-- clip at least a few rasters so you have something to show
-- automate the clipping process 
+- go and make the nice fancy looking rasters in QGIS.
+- present THOSE
+- figure out how to make Openlayers work later
+
+
+
+If you are working with rasters, your rasters should be 
+    clipped to the area of interest, 
+    reclassified (if needed), 
+    color coded (with a legend), 
+    named in a way that could be easily called from a software like JS.  
+Next week you should mostly focus on making the visualization interactive, and writing your final presentation.  
 
 
 The clipping process

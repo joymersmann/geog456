@@ -51,21 +51,65 @@
 </body>
 
 <script>
+    const trymedata = "./data/NDVI/20210101.tif";
     const turnerLonLat = [-90.55, 36.55];
     var turnerWM = ol.proj.fromLonLat(turnerLonLat);
-    const map = new ol.Map({
-    layers: [
-        new ol.layer.Tile({source: new ol.source.OSM()}),
-    ],
-    view: new ol.View({
-        center: turnerWM,
-        zoom: 10,
-    }),
-    target: 'map',
+    const myMap = new ol.Map({
+        layers: [
+            new ol.layer.Tile({source: new ol.source.OSM()}),
+            /* new ol.layer.Tile({
+                source: new ol.source.GeoTIFF({
+                    sources: [
+                        {
+                        url: "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif",
+                        },
+                    ],
+                }),
+            }),*/
+        ],
+        view: new ol.View({
+            projection: 'EPSG:3857', // here is the view projection
+            center: turnerWM,
+            zoom: 10,
+        }),
+        target: 'map',
     });
 
+    
+    /*const min = 10000;
+    const max = 15000;
+    //const base = 'https://landsat-pds.s3.amazonaws.com/c1/L8/139/045/LC08_L1TP_139045_20170304_20170316_01_T1/LC08_L1TP_139045_20170304_20170316_01_T1';
+    let response = fetch(`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`);
+    let asBlob = new Blob([`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`], {type: 'GeoTiff'})
 
+    const source = new ol.source.GeoTIFF({
+        sources: [
+            {
+                url: `https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`,
+                overviews: [`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif.ovr`],
+                blob: asBlob,
+                min: min,
+                max: max,
+                nodata: 0,
+            },
+        ],
+    });
 
+    const map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: source,
+            }),
+        ],
+        view: new ol.View({
+            projection: 'EPSG:3857', // here is the view projection
+            center: [0,0],
+            zoom: 10
+        }),
+    });
+
+*/
 
 
 
