@@ -14,7 +14,10 @@ Next week you should mostly focus on making the visualization interactive, and w
 
 
 The clipping process
+- load in the NDVI files
+- set all NDVI files to CRS: WGS84/EPSG 4326 
 - clip by the shapefile clipattempt2
+    - set target and source CRS
 - save the results to 
     C:\dev\GEOG456Fall2022\geog456\finalproject\data\precip\YYYYMMDD.tif
         or
@@ -26,7 +29,7 @@ The clipping process
 
 Limits:
     - Space: 40x40km square centered on Turner site
-        - Center: lat 36.55 long -90.55                         WGS84
+        - Center: lat 36.55 long -90.55                         WGS84: EPSG 4326
           Northline: lat 36.73 aka 36° 43' 47.9994"
           Southline: lat 36.37 aka 36° 22' 11.9994"
           Eastline: long -90.33 aka -90° 19' 47.9994"

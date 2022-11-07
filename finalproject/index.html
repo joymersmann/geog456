@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" 
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
+    <!-- allows usage of GeoTIFFs -->
+    <script src="https://unpkg.com/georaster@1.5.6/dist/georaster.browser.bundle.min.js"></script>
+    <script src="https://unpkg.com/proj4@2.8.0/dist/proj4-src.js"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/v3/webpack/bundle/georaster-layer-for-leaflet.min.js"></script>
     <title>GEOG 456 Final Project: Visualizing rain, water, and greening at the Turner site</title>
 </head>
 
@@ -51,91 +60,41 @@
 </body>
 
 <script>
-    /*const trymedata = "./data/NDVI/20210101.tif";
-    const turnerLonLat = [-90.55, 36.55];
-    var turnerWM = ol.proj.fromLonLat(turnerLonLat);
-    const myMap = new ol.Map({
-        layers: [
-            new ol.layer.Tile({source: new ol.source.OSM()}),
-            new ol.layer.Tile({
-                source: new ol.source.GeoTIFF({
-                    sources: [
-                        {
-                        url: "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif",
-                        },
-                    ],
-                }),
-            }),
-        ],
-        view: new ol.View({
-            projection: 'EPSG:3857', // here is the view projection
-            center: turnerWM,
-            zoom: 10,
-        }),
-        target: 'map',
-    });*/
+    var map = L.map('map').setView([36.558, -90.538], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+    var marker = L.marker([36.558, -90.538]).addTo(map);
+    marker.bindPopup("This is the approximate location of the sites of <b>Turner</b> and <b>Snodgrass</b>, on which my dissertation focuses.").openPopup();
 
-    fetch('data/NDVI/20210101.tif')
-  .then((response) => response.blob())
-  .then((blob) => {
-    const source = new ol.source.GeoTIFF({
-      sources: [
-        {
-          blob: blob,
-        },
-      ],
+    var tiffURL = "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif"
+
+    // FIXME: metadata currently says this tif is in 32767 aka a custom projection, need to be in 4326 aka WGS84
+
+    fetch(tiffURL)
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => {
+        parseGeoraster(arrayBuffer).then(georaster => {
+            console.log("georaster:", georaster);
+
+            /* GeoRasterLayer is an extension of GridLayer,
+                which means can use GridLayer options like opacity.
+                Just make sure to include the georaster option!
+                http://leafletjs.com/reference-1.2.0.html#gridlayer
+            */
+            let tifflayer = new GeoRasterLayer({
+                georaster: georaster,
+                opacity: 0.7
+            });
+            console.log("layer:", tifflayer);
+            tifflayer.addTo(map);
+            console.log("bounds: ", tifflayer.getBounds());
+
+            //map.fitBounds(layer.getBounds());
+            //document.getElementById("overlay").style.display = "none";
+        });
     });
-
-    const map = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({
-          source: source,
-        }),
-      ],
-      view: source.getView().then((viewConfig) => {
-        viewConfig.showFullExtent = true;
-        return viewConfig;
-      }),
-    });
-  });
-
-    
-    /*const min = 10000;
-    const max = 15000;
-    //const base = 'https://landsat-pds.s3.amazonaws.com/c1/L8/139/045/LC08_L1TP_139045_20170304_20170316_01_T1/LC08_L1TP_139045_20170304_20170316_01_T1';
-    let response = fetch(`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`);
-    let asBlob = new Blob([`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`], {type: 'GeoTiff'})
-
-    const source = new ol.source.GeoTIFF({
-        sources: [
-            {
-                url: `https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif`,
-                overviews: [`https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif.ovr`],
-                blob: asBlob,
-                min: min,
-                max: max,
-                nodata: 0,
-            },
-        ],
-    });
-
-    const map = new ol.Map({
-        target: 'map',
-        layers: [
-            new ol.layer.Tile({
-                source: source,
-            }),
-        ],
-        view: new ol.View({
-            projection: 'EPSG:3857', // here is the view projection
-            center: [0,0],
-            zoom: 10
-        }),
-    });
-
-*/
-
 
 
     // rgb(150, 200, 30), rgb(100,150,60), rgb(50,100,60), rgb(25,200,200)
