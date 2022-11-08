@@ -15,6 +15,7 @@
     <script src="https://unpkg.com/georaster@1.5.6/dist/georaster.browser.bundle.min.js"></script>
     <script src="https://unpkg.com/proj4@2.8.0/dist/proj4-src.js"></script>
     <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/v3/webpack/bundle/georaster-layer-for-leaflet.min.js"></script>
+    <script src="https://unpkg.com/chroma-js@2.4.2/chroma.js"></script>
     <title>GEOG 456 Final Project: Visualizing rain, water, and greening at the Turner site</title>
 </head>
 
@@ -46,20 +47,149 @@
     }
     
     a {
-        color: rgb(25,200,200);
+        color: rgb(50,100,60);
+    }
+
+    /* Formatting for input labels */
+    .inputLabel {
+        display: inline-block;
+        width: 100px;
+        height: 34px;
+        border: 3px;
+        border-style: solid;
+        border-color: rgb(100,150,60);
+        background-color: rgb(170,220,130);
+    }
+
+    /* Formating for range sliders */
+    .rangecontainer {
+        position: relative;
+        display: inline-block;
+        width: 75%;
+        height: 26px;
+        margin-top: 4px;
+    }
+    /* The slider itself */
+    .ranger {
+        -webkit-appearance: none;  /* Override default CSS styles */
+        appearance: none;
+        width: 100%; /* Full-width */
+        height: 26px; /* Specified height */
+        /*position: absolute;*/
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgb(100,150,60); 
+        outline: solid 4px rgb(100,150,60); /* Remove outline */
+        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+    }
+    /* Mouse-over effects */
+    .ranger:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+    }
+    /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+    .ranger::-webkit-slider-thumb {
+        -webkit-appearance: none; /* Override default look */
+        appearance: none;
+        height: 26px;
+        width: 26px;
+        left: 25px;
+        bottom: 4px;
+        background: white; /* Green background */
+        cursor: pointer; /* Cursor on hover */
+        border: 1px solid white;
+        border-radius: 1px;
+    }
+    .ranger::-moz-range-thumb {
+        height: 25px;
+        width: 25px;
+        background: white; /* Green background */
+        cursor: pointer; /* Cursor on hover */
+        border: 1px solid white;
+        border-radius: 1px;
     }
     
+
+    /* Formatting the switch! */
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgb(150, 200, 30);
+        opacity: 0.6; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+    }
+    /* Mouse-over effects */
+    .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .2s;
+        transition: .2s;
+    }
+    input:checked + .slider {
+        background-color: rgb(25,200,200);
+    }
+    input:focus + .slider {
+        box-shadow: 0 0 1px rgb(25,200,200);
+    }
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+        
     </style>
 
 <body>
     <div class="formatme" style="width: 75%;"><h1>Visualizing rain, water, and greening at the Turner site</h1>
         A final project for GEOG 456 by Joy Mersmann</div>
-    <div class="formatme">Explanation of the map and its usage goes here.</div>
+    <div class="formatme">Explanation of the map and its usage goes here.
+
+        <p style="text-align:center;">
+        <!-- Rectangular switch -->
+        <label class="inputLabel" style="border-color: rgb(150, 200, 30); background-color:rgb(190, 250, 110);">NDVI</label> <label class="switch">
+            <input id="NDVIorPrecipInput" type="checkbox" onchange="updateMap()">
+            <span class="slider"></span>
+        </label> <label class="inputLabel"  style="border-color: rgb(25,200,200); background-color:rgb(125,255,255);">Precipitation </label>
+        <br><label class="inputLabel">Date: <a id="dateLabel">2021/1/1</a></label> <label class="rangecontainer"><input id="dateInput" type="range" min="1" max="31" class="ranger" oninput="updateMap()"></label>
+        </p>
+    </div>
     <div id='map' class="map" style="height: 400px;"></div>
     <div id="graph" class="formatme" style="height: 200px;">Graph goes here</div>
 </body>
 
 <script>
+    /* Instantiating the basic map */
     var map = L.map('map').setView([36.558, -90.538], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -68,15 +198,53 @@
     var marker = L.marker([36.558, -90.538]).addTo(map);
     marker.bindPopup("This is the approximate location of the sites of <b>Turner</b> and <b>Snodgrass</b>, on which my dissertation focuses.").openPopup();
 
-    var tiffURL = "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif"
+    /* Instantiating the controls */
+    let NDVIorPrecipInput = document.getElementById("NDVIorPrecipInput");
+    let dateInput = document.getElementById("dateInput");
+    var date = "20210101";
 
-    // FIXME: metadata currently says this tif is in 32767 aka a custom projection, need to be in 4326 aka WGS84
+    function updateMap(){
+        //console.log("NDVI or Precip input value: ", NDVIorPrecipInput.checked);
+        //console.log("dateInput value: ", dateInput.value);
+        var date = "202101";
+        var colorscale = chroma.scale("greys");
+        var path = "https://joymersmann.github.io/geog456/finalproject/data/";
+
+        if (NDVIorPrecipInput.checked) {
+            // precip
+            path = path + "precip/"
+            colorscale = chroma.scale("RdYlBu"); // for precip
+        } else {
+            // NDVI
+            path = path + "NDVI/"
+            colorscale = chroma.scale("Viridis"); //for NDVI
+        }
+        if (parseInt(dateInput.value) < 10) {
+            date = date + "0";
+        }
+        date = date + dateInput.value;
+        path = path + date + ".tif";
+        //console.log("path is ", path);
+        console.log("checking date: ", date);
+
+    }
+    var tiffURL = "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif"
 
     fetch(tiffURL)
     .then(response => response.arrayBuffer())
     .then(arrayBuffer => {
         parseGeoraster(arrayBuffer).then(georaster => {
             console.log("georaster:", georaster);
+            //FIXME -- CURRENTLY SET TO NDVI SETTINGS
+            const min = georaster.mins[0];
+            const max = georaster.maxs[0];
+            const range = georaster.ranges[0];
+            console.log("min: ", min, "   max: ", max, "   range: ", range);
+
+            // available color scales can be found by running console.log(chroma.brewer);
+            var scaleNDVI = chroma.scale("Viridis"); //for NDVI
+            var scalePrecip = chroma.scale("RdYlBu"); // for precip
+            
 
             /* GeoRasterLayer is an extension of GridLayer,
                 which means can use GridLayer options like opacity.
@@ -85,13 +253,21 @@
             */
             let tifflayer = new GeoRasterLayer({
                 georaster: georaster,
-                opacity: 0.7
+                opacity: 0.9,
+                pixelValuesToColorFn: function(pixelValues) {
+                    var pixelValue = pixelValues[0]; // there's just one band in this raster
+                    // if there's a lack of data, don't return a color
+                    if (pixelValue === -9999) return null;
+                    // scale to 0 - 1 used by chroma
+                    //var scaledPixelValue = (pixelValue - min) / range;
+                    var scaledPixelValue = pixelValue / max;
+                    var color = scalePrecip(scaledPixelValue).hex();
+                    return color;
+                },
             });
-            console.log("layer:", tifflayer);
             tifflayer.addTo(map);
-            console.log("bounds: ", tifflayer.getBounds());
 
-            //map.fitBounds(layer.getBounds());
+            map.fitBounds(tifflayer.getBounds());
             //document.getElementById("overlay").style.display = "none";
         });
     });

@@ -1,7 +1,12 @@
 TO DO:
-- go and make the nice fancy looking rasters in QGIS.
-- present THOSE
-- figure out how to make Openlayers work later
+- hook up the NDVIorPrecip switch and date range slider to the GeoTIFF layer for just January 2021
+- reclip and export all the maps
+- create a nice colormapping function
+- figure out how to change the colormapping function so it can 
+- set up the date range slider so it can run through the entire time range
+- figure out how to put the legends in there
+- do pretty CSS on the date range slider
+- the graph thing, MAYBE
 
 
 
