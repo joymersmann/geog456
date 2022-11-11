@@ -1,40 +1,26 @@
 TO DO:
-- hook up the NDVIorPrecip switch and date range slider to the GeoTIFF layer for just January 2021
 - reclip and export all the maps
-- create a nice colormapping function
-- figure out how to change the colormapping function so it can 
-- set up the date range slider so it can run through the entire time range
+- change the startDate and range on the date slider to account for the available maps
+- figure out what's going on with the NDVI map values and how to appropriately colorscale them.
 - figure out how to put the legends in there
-- do pretty CSS on the date range slider
 - the graph thing, MAYBE
 
-
-
-If you are working with rasters, your rasters should be 
-    clipped to the area of interest, 
-    reclassified (if needed), 
-    color coded (with a legend), 
-    named in a way that could be easily called from a software like JS.  
-Next week you should mostly focus on making the visualization interactive, and writing your final presentation.  
-
-
 The clipping process
-- load in the NDVI files
-- set all NDVI files to CRS: WGS84/EPSG 4326 
+- load in the NDVI/precip files
+- get them into the correct CRS
+    - via Properties, simply set all NDVI files to CRS: WGS84/EPSG 4326 
+    - Warp (Reproject) the unclipped precip into WGS84/EPSG:4326
 - clip by the shapefile clipattempt2
-    - set target and source CRS
+    - set target and source CRS to WGS84/EPSG:4326
 - save the results to 
     C:\dev\GEOG456Fall2022\geog456\finalproject\data\precip\YYYYMMDD.tif
         or
     C:\dev\GEOG456Fall2022\geog456\finalproject\data\NDVI\YYYYMMDD.tif
 
-
-
-
-
-Limits:
+Dimensions:
+    - Coordinate system: WGS84/EPSG:4326
     - Space: 40x40km square centered on Turner site
-        - Center: lat 36.55 long -90.55                         WGS84: EPSG 4326
+        - Center: lat 36.55 long -90.55                         
           Northline: lat 36.73 aka 36° 43' 47.9994"
           Southline: lat 36.37 aka 36° 22' 11.9994"
           Eastline: long -90.33 aka -90° 19' 47.9994"
@@ -50,36 +36,18 @@ Data:
     - Precipitation
         - source: https://water.weather.gov/precip/index.php
         - format: netCDF
-        - filename: precip-YYYYMMDD.nc === FIXME NEEDS FORMATTING
         - resolution 4 by 4 kilometer
+    - NDVI
+        - source: https://www.ncei.noaa.gov/products/climate-data-records/normalized-difference-vegetation-index
+        - format: netCDF
+        - resolution: 0.05° by 0.05°
     - Surface/ground water
         - source: https://maps.waterdata.usgs.gov/mapper 
         - filename: surfacewater-STATIONNUMBER-YYYYMM
                     groundwater-STATIONNUMBER-YYYYMM
         - resolution: point
-    - NDVI
-        - source: https://www.ncei.noaa.gov/products/climate-data-records/normalized-difference-vegetation-index
-        - format: netCDF
-        - filename: NDVI-YYYYMMDD.nc 
-        - resolution: 0.05° by 0.05°
-
-Architecture:
-    - OpenLayers
-    - ncWMS?/netcdfjs?
-        - https://stackoverflow.com/questions/25393611/netcdf-format-to-openlayers-map 
-        - https://github.com/cheminfo/netcdfjs
 
 
 
-
-
-<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v5.3.0/build/ol.js"></script>
-    
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v5.3.0/css/ol.css" type="text/css">
-        
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/Map.min.js" integrity="sha512-VHEH+gECTYxkL3lFJ1OnzHwW4ajPiHpE8zLvm6NcP/dRRQk9Zkq+hgjFQU6E8eRP5crajntx90bhHQMARG33RQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/View.min.js" integrity="sha512-qGj5P/lTXcA8TngwaQZHFSrl81blswgwPtAoCNsmGggCbKm18WW73ovycZQEtGuEX1Wd4jeQeQBC79Hc/RdLrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/source/OSM.min.js" integrity="sha512-CDadLYY1wgYlvpDlb4tm87eWKCmayEKmzeajg+z6ZJaDTR0eI1dnFuPm6dhmBk3h/esQb6L+qQI988YeeQroAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.6.1/layer/Tile.min.js" integrity="sha512-/KVicmt+0hJ1SdftYoTgKlxg7T+hE9EJvi2V0SwpRaEP7KhC5on3mSDJnHuAbuRVxmV9cH9vpKNUXCWgBv96sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+// rgb(150, 200, 30), rgb(100,150,60), rgb(50,100,60), rgb(25,200,200)
+// <link rel="stylesheet" href="C:\dev\GEOG456Fall2022\geog456\finalproject\finalproject.css">

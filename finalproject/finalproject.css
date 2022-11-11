@@ -25,5 +25,123 @@ h1 {
 }
 
 a {
-    color: rgb(25,200,200);
+    color: rgb(50,100,60);
+}
+
+/* Formatting for input labels */
+.inputLabel {
+    display: inline-block;
+    width: 100px;
+    height: 34px;
+    border: 3px;
+    border-style: solid;
+    border-color: rgb(100,150,60);
+    background-color: rgb(170,220,130);
+}
+
+/* Formating for range sliders */
+.rangecontainer {
+    position: relative;
+    display: inline-block;
+    width: 75%;
+    height: 26px;
+    margin-top: 4px;
+}
+/* The slider itself */
+.ranger {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 26px; /* Specified height */
+    /*position: absolute;*/
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(100,150,60); 
+    outline: solid 4px rgb(100,150,60); /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+/* Mouse-over effects */
+.ranger:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.ranger::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    height: 26px;
+    width: 26px;
+    left: 25px;
+    bottom: 4px;
+    background: white; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border: 1px solid white;
+    border-radius: 1px;
+}
+.ranger::-moz-range-thumb {
+    height: 25px;
+    width: 25px;
+    background: white; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border: 1px solid white;
+    border-radius: 1px;
+}
+
+
+/* Formatting the switch! */
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(150, 200, 30);
+    opacity: 0.6; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .2s;
+    transition: .2s;
+}
+input:checked + .slider {
+    background-color: rgb(25,200,200);
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px rgb(25,200,200);
+}
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
 }
