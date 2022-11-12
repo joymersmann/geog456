@@ -1,5 +1,5 @@
 /* Instantiating the basic map */
-var map = L.map('map').setView([36.558, -90.538], 10);
+var map = L.map('map').setView([36.558, -90.538], 9);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
@@ -17,30 +17,23 @@ const dateIncrConst = 1000*60*60*24;
 var tiffHolder = L.layerGroup([]);
 
 /* Update the map when the controls are interacted with */
-function updateMap(){
-    /* Remove any existing tiffs on the map */
-    tiffHolder.eachLayer(function (layer) {
-        map.removeLayer(layer);
-    })
-    tiffHolder.clearLayers();
-    
+function updateMap(){    
     /* calculating the new tiff to pull from (based on inputs) and how to display it */
     var path = rootPath;
     var colorscale = chroma.scale("greys");
     var date = startDate;
-    var min = 0;
     var max = 1;
 
     if (NDVIorPrecipInput.checked) {
         // precip
         path = path + "precip/"
-        colorscale = chroma.bezier(['ffffee', '7DFFFF', '19C8C8', '00227d']); // for precip
+        colorscale = chroma.bezier(['ffffee', '7DFFFF', '19C8C8', '00227d']); 
         max = 10;
     } else {
         // NDVI
         path = path + "NDVI/"
-        colorscale = chroma.bezier(['4b3200', 'f2ec76', 'f2ec76', '969600', '96c81e']); //for NDVI
-        max = 500;
+        colorscale = chroma.bezier(['4b3200', 'f2ec76', '969600', '96c81e']);
+        max = 10000; 
     }
     date = new Date(startDate.getTime() + dateIncrConst*dateInput.value);
     var dateYear = date.getUTCFullYear();
@@ -63,28 +56,35 @@ function updateMap(){
         parseGeoraster(arrayBuffer).then(georaster => {
             console.log("georaster:", georaster);
 
-
+            for (var i = 0; i < georaster.mins.length; i++) {
+                console.log("for iteration ", i,", min is: ", georaster.mins[i], ", max is: ", georaster.maxs[i])
+            }
             /* generate the new tiffLayer*/
             let tiffLayer = new GeoRasterLayer({
                 georaster: georaster,
                 opacity: 0.8,
                 pixelValuesToColorFn: function(pixelValues) {
                     var pixelValue = pixelValues[0]; // there's just one band in this raster
-                    if (pixelValue === -9999) return null; // if there's a lack of data, don't return a color
-                    // scale to 0 - 1 used by chroma
-                    //var scaledPixelValue = (pixelValue - min) / range;
+                    if (pixelValue === -9999) return 'ffffff'; // if there's a lack of data, don't return a color
+
+                    /* Scale the pixel values to 0 - 1 as used by chroma */
+                    //var scaledPixelValue = (pixelValue - min) / (max - min);
                     var scaledPixelValue = pixelValue / max;
                     var color = colorscale(scaledPixelValue).hex();
                     return color;
                 },
             });
+            /* Remove any existing tiffs on the map */
+            tiffHolder.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            })
+            tiffHolder.clearLayers();
+
+            /* Add the new tiffLayer to the map*/
             tiffLayer.addTo(map);
 
             /* Add the tifflayer to the tiffHolder LayerGroup for easy removal on the next update */
             tiffHolder.addLayer(tiffLayer);
-
-            console.log("tiffHolder has ", tiffHolder.getLayers());
-
         });
     });
 

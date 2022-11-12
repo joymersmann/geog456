@@ -1,7 +1,5 @@
 TO DO:
 - reclip and export all the maps
-- change the startDate and range on the date slider to account for the available maps
-- figure out what's going on with the NDVI map values and how to appropriately colorscale them.
 - figure out how to put the legends in there
 - the graph thing, MAYBE
 
