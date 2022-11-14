@@ -1,7 +1,6 @@
 TO DO:
-- reclip and export all the maps
-- figure out how to put the legends in there
-- the graph thing, MAYBE
+- download, process, and clip the whole year's worth of data
+    - if so, need to fix: the max on the dateInput, the max on the precip in both the updateMap and addLegend sections
 
 The clipping process
 - load in the NDVI/precip files

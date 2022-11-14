@@ -9,6 +9,8 @@ marker.bindPopup("This is the approximate location of the sites of <b>Turner</b>
 
 /* Instantiating the controls and constants needed to operate them */
 let NDVIorPrecipInput = document.getElementById("NDVIorPrecipInput");
+const colorscalePrecip = chroma.bezier(['ffffee', '7DFFFF', '19C8C8', '00227d']);  
+const colorscaleNDVI = chroma.bezier(['4b3200', 'FAFAC8', '969600', '96c81e', '32641E']);
 let dateInput = document.getElementById("dateInput");
 let dateLabel = document.getElementById("dateLabel");
 const rootPath = "https://joymersmann.github.io/geog456/finalproject/data/";
@@ -27,12 +29,12 @@ function updateMap(){
     if (NDVIorPrecipInput.checked) {
         // precip
         path = path + "precip/"
-        colorscale = chroma.bezier(['ffffee', '7DFFFF', '19C8C8', '00227d']); 
-        max = 10;
+        colorscale = colorscalePrecip; 
+        max = 3;
     } else {
         // NDVI
         path = path + "NDVI/"
-        colorscale = chroma.bezier(['4b3200', 'f2ec76', '969600', '96c81e']);
+        colorscale = colorscaleNDVI;
         max = 10000; 
     }
     date = new Date(startDate.getTime() + dateIncrConst*dateInput.value);
@@ -87,9 +89,53 @@ function updateMap(){
             tiffHolder.addLayer(tiffLayer);
         });
     });
-
-
-
 }
-updateMap(); 
-// to update the map on refresh
+
+/* Creating the legends */
+var legendNDVI = L.control({position: 'bottomleft'});
+var legendPrecip = L.control({position: 'bottomright'});
+
+legendNDVI.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend'), 
+    grades = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    max = 1;
+    
+    div.innerHTML += "NDVI <br>";
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i], colorscaleNDVI, max) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+};
+
+legendPrecip.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend'),
+    grades = [0, 0.5, 1, 1.5, 2, 2.5, 3],
+    max = 3;
+    
+    div.innerHTML += "Inches of precipitation <br>";
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i], colorscalePrecip, max) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+};
+legendNDVI.addTo(map);
+legendPrecip.addTo(map);
+
+
+function getColor(pixelValue, colorscale, max) {
+    if (pixelValue === -9999) return '000000'; // if there's a lack of data, don't return a color
+
+    /* Scale the pixel values to 0 - 1 as used by chroma */
+    //var scaledPixelValue = (pixelValue - min) / (max - min);
+    var scaledPixelValue = pixelValue / max;
+    var color = colorscale(scaledPixelValue).hex();
+    return color;
+}
+
+updateMap(); // to update the map on refresh

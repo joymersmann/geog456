@@ -22,20 +22,29 @@
 
 <body>
     <div class="formatme" style="width: 75%;"><h1>Visualizing rain, water, and greening at the Turner site</h1>
-        A final project for GEOG 456 by Joy Mersmann</div>
-    <div class="formatme">Explanation of the map and its usage goes here.
+        A final project for GEOG 456 by Joy Mersmann<br><br> 
+    </div>
 
-        <p style="text-align:center;">
+    <div class="formatme"> 
+         <br>This map shows NDVI and precipitation levels over the period of time from January 1st 2021 onward 
+        in a 40 by 40 kilometer square area around the Turner and Snodgrass archaeological sites, at which I am doing my
+        dissertation work on local agricultural strategies. Though the local residents and their agricultural
+        practices have changed in the 700+ years since the Turner and Snodgrass sites were occupied, trends in 
+        rainfall and greening still impact the area's agricultural fields. <br> <br>
+    </div>
+
+    <div id='map' class="map" style="height: 400px;"></div>
+
+    <div class="formatme"><p style="text-align:center;">
         <!-- Rectangular switch -->
         <label class="inputLabel" style="border-color: rgb(150, 200, 30); background-color:rgb(190, 250, 110);">NDVI</label> <label class="switch">
             <input id="NDVIorPrecipInput" type="checkbox" onchange="updateMap()">
             <span class="slider"></span>
         </label> <label class="inputLabel"  style="border-color: rgb(25,200,200); background-color:rgb(125,255,255);">Precipitation </label>
         <br><label class="inputLabel">Date: <a id="dateLabel">2021/01/01</a></label> <label class="rangecontainer"><input id="dateInput" type="range" min="0" max="30" class="ranger" oninput="updateMap()"></label>
-        </p>
+        </p> 
     </div>
-    <div id='map' class="map" style="height: 400px;"></div>
-    <div id="graph" class="formatme" style="height: 200px;">Graph goes here</div>
+    <!--<div id="graph" class="formatme" style="height: 200px;">Graph goes here</div> -->
 </body>
 
 <script src="./finalproject.js"></script>
