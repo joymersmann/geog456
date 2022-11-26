@@ -56,24 +56,16 @@ function updateMap(){
     .then(response => response.arrayBuffer())
     .then(arrayBuffer => {
         parseGeoraster(arrayBuffer).then(georaster => {
-            console.log("georaster:", georaster);
-
-            for (var i = 0; i < georaster.mins.length; i++) {
-                console.log("for iteration ", i,", min is: ", georaster.mins[i], ", max is: ", georaster.maxs[i])
-            }
             /* generate the new tiffLayer*/
             let tiffLayer = new GeoRasterLayer({
                 georaster: georaster,
                 opacity: 0.8,
                 pixelValuesToColorFn: function(pixelValues) {
-                    var pixelValue = pixelValues[0]; // there's just one band in this raster
-                    if (pixelValue === -9999) return 'ffffff'; // if there's a lack of data, don't return a color
-
-                    /* Scale the pixel values to 0 - 1 as used by chroma */
-                    //var scaledPixelValue = (pixelValue - min) / (max - min);
-                    var scaledPixelValue = pixelValue / max;
-                    var color = colorscale(scaledPixelValue).hex();
-                    return color;
+                    var pixelValue = pixelValues[0]; // Using the first and only band in the raster
+                    if (pixelValue === -9999) return 'ffffff'; // If there's a lack of data, don't return a color
+                    var scaledPixelValue = pixelValue / max; // Scale the pixel values to 0 - 1 as used by chroma
+                    var color = colorscale(scaledPixelValue).hex(); // Get the color
+                    return color; //Return the color
                 },
             });
             /* Remove any existing tiffs on the map */
