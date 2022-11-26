@@ -1,8 +1,12 @@
 /* Instantiating the basic map */
 var map = L.map('map').setView([36.558, -90.538], 9);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
 
 /* Setting up for TiffLayer creation */
-let path = "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif"; 
+var path = "https://joymersmann.github.io/geog456/finalproject/data/NDVI/20210101.tif"; 
 var colorscale = chroma.scale("greys");
 var tiffHolder = L.layerGroup([]);
 
@@ -11,6 +15,7 @@ function updateTiff() {
     .then(response => response.arrayBuffer())
     .then(arrayBuffer => {
         parseGeoraster(arrayBuffer).then(georaster => {
+            console.log(georaster);
             /* Acquiring the min and max values in the georaster*/
             var min = georaster.mins[0];
             var max = georaster.maxs[0];
@@ -27,18 +32,15 @@ function updateTiff() {
                     return color; // Return the color
                 },
             });
-            /* Remove any existing tiffs on the map */
-            tiffHolder.eachLayer(function (layer) {
-                map.removeLayer(layer);
-            })
-            tiffHolder.clearLayers();
 
             /* Add the new tiffLayer to the map*/
             tiffLayer.addTo(map);
 
-            /* Add the tifflayer to the tiffHolder LayerGroup for easy removal on the next update */
+            /* Add the tifflayer to the tiffHolder LayerGroup for easy editing or removal on the next update */
             tiffHolder.addLayer(tiffLayer);
 
         });
     });
 }
+
+updateTiff();
